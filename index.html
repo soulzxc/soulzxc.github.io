@@ -394,7 +394,17 @@
             if (audio.duration) {
                 audio.currentTime = percentage * audio.duration;
             }
-        });
+document.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    audio.pause();
+    isPlaying = false;
+  });
+    document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    audio.pause();
+    isPlaying = false;
+  }
+});
     </script>
 
 </body>
