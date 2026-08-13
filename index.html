@@ -337,82 +337,8 @@
         </div>
     </div>
 
-    <audio id="audio" src="https://apostol-space.tech/uploads/d1f6574cdb8f27278a19ca5b3499f627_028e8bc4a6596cd5f33fbc965454379a.mp3" loop></audio>
 
-    <script>
-        const splashScreen = document.getElementById('splashScreen');
-        const mainContainer = document.getElementById('mainContainer');
-        const playBtn = document.getElementById('playBtn');
-        const audio = document.getElementById('audio');
-        const progressBar = document.getElementById('progressBar');
-        const progressContainer = document.getElementById('progressContainer');
-        const trackTitle = document.getElementById('trackTitle');
-
-        let isPlaying = false;
-
-        function stopAudio() {
-            if (audio) {
-                audio.pause();
-                isPlaying = false;
-                trackTitle.textContent = "Jarry - Princess (Пауза)";
-            }
-        }
-
-        splashScreen.addEventListener('click', () => {
-            audio.play().then(() => {
-                isPlaying = true;
-                trackTitle.textContent = "Jarry - Princess (Играет)";
-            }).catch(e => console.log("Ошибка автозапуска"));
-
-            splashScreen.classList.add('fade-out');
-            setTimeout(() => {
-                splashScreen.style.display = 'none';
-                mainContainer.classList.add('visible');
-            }, 600);
-        });
-
-        playBtn.addEventListener('click', (e) => {
-            if (e.target.closest('#progressContainer')) return;
-
-            if (!isPlaying) {
-                audio.play().then(() => {
-                    isPlaying = true;
-                    trackTitle.textContent = "Jarry - Princess (Играет)";
-                });
-            } else {
-                stopAudio();
-            }
-        });
-
-        audio.addEventListener('timeupdate', () => {
-            if(audio.duration) {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                progressBar.style.width = progress + '%';
-            }
-        });
-
-        progressContainer.addEventListener('click', (e) => {
-            const rect = progressContainer.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const width = rect.width;
-            const percentage = clickX / width;
-            
-            if (audio.duration) {
-                audio.currentTime = percentage * audio.duration;
-            }
-        });
-
-        // Отключение при клике по любым ссылкам
-        document.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', stopAudio);
-        });
-
-        // Отключение при сворачивании, смене вкладок или уходе со страницы
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) stopAudio();
-        });
-        window.addEventListener('pagehide', stopAudio);
-    </script>
+        </script>
 
 </body>
 </html>
