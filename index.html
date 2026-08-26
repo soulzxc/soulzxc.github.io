@@ -420,6 +420,19 @@
         const progressSlider = document.getElementById('progressSlider');
         const timeDisplay = document.getElementById('timeDisplay');
 
+        // Автозапуск аудио при первом же клике на документе
+        document.addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    playIcon.classList.remove('fa-play');
+                    playIcon.classList.add('fa-pause');
+                    coverImg.style.animationPlayState = 'running';
+                }).catch(error => {
+                    console.log("Автозапуск заблокирован браузером:", error);
+                });
+            }
+        }, { once: true });
+
         function createSmokeEffect(e) {
             smokeOverlay.style.opacity = '1';
             
@@ -454,14 +467,6 @@
             }, 1200);
 
             mainWrapper.classList.add('visible');
-
-            audio.play().then(() => {
-                playIcon.classList.remove('fa-play');
-                playIcon.classList.add('fa-pause');
-                coverImg.style.animationPlayState = 'running';
-            }).catch(error => {
-                console.log("Автозапуск заблокирован браузером:", error);
-            });
         });
 
         playBtn.addEventListener('click', () => {
@@ -508,6 +513,18 @@
             playIcon.classList.add('fa-play');
             coverImg.style.animationPlayState = 'paused';
             progressSlider.value = 0;
+        });
+
+        // Находим все ссылки на сайте и ставим трек на паузу при клике
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (audio) {
+                    audio.pause();
+                    playIcon.classList.remove('fa-pause');
+                    playIcon.classList.add('fa-play');
+                    coverImg.style.animationPlayState = 'paused';
+                }
+            });
         });
     </script>
 </body>
