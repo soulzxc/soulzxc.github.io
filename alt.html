@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>psycho-alt | Profile</title>
+    <!-- Иконки FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at top, #3a0d66, #14052b, #090214);
+            color: #fff;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Экран заставки (Click Here) */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(5, 1, 10, 0.98);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: pointer;
+            transition: opacity 1.2s ease;
+        }
+
+        .click-here-box {
+            text-align: center;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        .click-here-box h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(176, 82, 255, 0.8);
+            text-transform: uppercase;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+
+        /* Дымовой / световой туман */
+        .smoke-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .smoke-particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(176, 82, 255, 0.25) 0%, rgba(30, 10, 50, 0.15) 40%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+            transform: translate(-50%, -50%);
+            animation: smokeExpand 1.6s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+
+        @keyframes smokeExpand {
+            0% {
+                transform: translate(-50%, -50%) scale(0.2);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Основной контейнер сайта */
+        .main-wrapper {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1s ease, transform 1s ease;
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .main-wrapper.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Главная карточка профиля */
+        .card {
+            background: rgba(45, 20, 75, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+        }
+
+        /* Блок аватара */
+        .avatar-wrapper {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+
+        /* Блок имени с анимацией печати */
+        .username-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .username {
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            animation: typing 4s steps(10, end) infinite, blink-caret 0.75s step-end infinite;
+            border-right: 2px solid #fff;
+        }
+
+        @keyframes typing {
+            0% { width: 0; }
+            50% { width: 145px; }
+            90% { width: 145px; }
+            100% { width: 0; }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #fff; }
+        }
+
+        .diamond-icon {
+            color: #b052ff;
+            font-size: 20px;
+            filter: drop-shadow(0 0 8px #b052ff);
+        }
+
+        .subtitle {
+            color: #ccc;
+            font-size: 14px;
+            margin-top: 6px;
+            margin-bottom: 24px;
+        }
+
+        /* Ссылки (социальные сети) — Исправленная пропорциональная сетка */
+        .socials {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .social-item {
+            flex: 1; /* Одинаковая ширина колонок для идеального выравнивания */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            color: #fff;
+            transition: transform 0.2s;
+            text-align: center;
+        }
+
+        .social-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .social-item i {
+            font-size: 26px;
+            filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+        }
+
+        .social-item span {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #aaa;
+            line-height: 1.2;
+            padding: 0 4px;
+        }
+
+        /* Блок местоположения */
+        .location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        /* Музыкальный плеер */
+        .music-player {
+            background: rgba(20, 5, 43, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .music-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .music-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .rotating-cover {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(176, 82, 255, 0.5);
+            animation: rotateCover 6s linear infinite;
+            animation-play-state: paused;
+        }
+
+        @keyframes rotateCover {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .play-btn {
+            background: #b052ff;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(176, 82, 255, 0.5);
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .music-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .music-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #eee;
+        }
+
+        .music-artist {
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        .music-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .progress-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .progress-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #b052ff;
+            box-shadow: 0 0 8px #b052ff;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .progress-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .progress-slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border: none;
+            border-radius: 50%;
+            background: #b052ff;
+            box-shadow: 0 0 8px #b052ff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Экран заставки -->
+    <div id="splash-screen">
+        <div class="click-here-box">
+            <h1>Click Here</h1>
+        </div>
+    </div>
+
+    <!-- Дымовой / световой эффект -->
+    <div class="smoke-overlay" id="smokeOverlay"></div>
+
+    <!-- Основной контент сайта -->
+    <div class="main-wrapper" id="mainWrapper">
+        <div class="card">
+            <div class="avatar-wrapper">
+                <img src="https://cdn.phototourl.com/free/2026-08-26-26a4d1bf-d529-4752-b4e7-b835f7e01447.jpg" alt="psycho-alt avatar" class="avatar">
+            </div>
+
+            <div class="username-container">
+                <div class="username">psycho-alt</div>
+                <i class="fa-solid fa-gem diamond-icon"></i>
+            </div>
+            
+            <div class="subtitle">Not Editor / index tg</div>
+
+            <!-- Иконки соцсетей -->
+            <div class="socials">
+                <a href="https://t.me/esxort" target="_blank" class="social-item"><i class="fa-brands fa-telegram"></i><span>me</span></a>
+                <a href="https://t.me/liblerage" target="_blank" class="social-item"><i class="fa-brands fa-telegram"></i><span>channel</span></a>
+                <a href="https://www.tiktok.com/@menliuse?_r=1&_t=ZS-99DAplnvvT3" target="_blank" class="social-item"><i class="fa-brands fa-tiktok"></i><span>current tt used</span></a>
+            </div>
+
+            <div class="location">
+                <i class="fa-solid fa-location-dot"></i>
+                <span>Commonwealth of Independent States</span>
+            </div>
+
+            <!-- Музыкальный плеер -->
+            <div class="music-player">
+                <audio id="audio" src="https://files.catbox.moe/m3p3cf.m4a" preload="metadata"></audio>
+                
+                <div class="music-top">
+                    <div class="music-meta">
+                        <button class="play-btn" id="playBtn"><i class="fa-solid fa-play" id="playIcon"></i></button>
+                        <img src="https://cdn.phototourl.com/free/2026-08-26-9de19a87-5c9d-4540-9de8-8c3c42607e9e.jpg" alt="cover" class="rotating-cover" id="coverImg">
+                        <div class="music-details">
+                            <span class="music-name">Bang</span>
+                            <span class="music-artist">Anitta</span>
+                        </div>
+                    </div>
+                    <div class="music-time" id="timeDisplay">0:00 / 0:00</div>
+                </div>
+
+                <!-- Ползунок времени -->
+                <input type="range" class="progress-slider" id="progressSlider" value="0" min="0" max="100" step="0.1">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const splashScreen = document.getElementById('splash-screen');
+        const mainWrapper = document.getElementById('mainWrapper');
+        const smokeOverlay = document.getElementById('smokeOverlay');
+        const audio = document.getElementById('audio');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const coverImg = document.getElementById('coverImg');
+        const progressSlider = document.getElementById('progressSlider');
+        const timeDisplay = document.getElementById('timeDisplay');
+
+        function createSmokeEffect(e) {
+            smokeOverlay.style.opacity = '1';
+            
+            const x = e ? e.clientX : window.innerWidth / 2;
+            const y = e ? e.clientY : window.innerHeight / 2;
+
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('smoke-particle');
+                
+                const size = Math.random() * 300 + 200;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                const offsetX = (Math.random() - 0.5) * 150;
+                const offsetY = (Math.random() - 0.5) * 150;
+                particle.style.left = `${x + offsetX}px`;
+                particle.style.top = `${y + offsetY}px`;
+
+                smokeOverlay.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 1600);
+            }
+        }
+
+        splashScreen.addEventListener('click', (e) => {
+            createSmokeEffect(e);
+
+            splashScreen.style.opacity = '0';
+            setTimeout(() => {
+                splashScreen.style.display = 'none';
+            }, 1200);
+
+            mainWrapper.classList.add('visible');
+
+            audio.play().then(() => {
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+                coverImg.style.animationPlayState = 'running';
+            }).catch(error => {
+                console.log("Автозапуск заблокирован браузером:", error);
+            });
+        });
+
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+                coverImg.style.animationPlayState = 'running';
+            } else {
+                audio.pause();
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+                coverImg.style.animationPlayState = 'paused';
+            }
+        });
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            if (!isNaN(audio.duration)) {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progressSlider.value = progressPercent;
+                timeDisplay.innerText = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+            }
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            timeDisplay.innerText = `0:00 / ${formatTime(audio.duration)}`;
+        });
+
+        progressSlider.addEventListener('input', () => {
+            const duration = audio.duration;
+            if (!isNaN(duration)) {
+                audio.currentTime = (progressSlider.value / 100) * duration;
+            }
+        });
+
+        audio.addEventListener('ended', () => {
+            playIcon.classList.remove('fa-pause');
+            playIcon.classList.add('fa-play');
+            coverImg.style.animationPlayState = 'paused';
+            progressSlider.value = 0;
+        });
+    </script>
+</body>
+</html>
